@@ -1,5 +1,6 @@
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
+import { schemaTypes } from "./schemas";
 
 export default defineConfig({
   title: "Netlify Astro Sanity",
@@ -7,28 +8,6 @@ export default defineConfig({
   dataset: import.meta.env.PUBLIC_SANITY_STUDIO_DATASET,
   plugins: [structureTool()],
   schema: {
-    types: [
-      {
-        type: "document",
-        name: "post",
-        title: "Post",
-        fields: [
-          {
-            name: "title",
-            title: "Title",
-            type: "string",
-          },
-          {
-            name: "slug",
-            title: "Slug",
-            type: "slug",
-            options: {
-              source: "title",
-              maxLength: 96,
-            },
-          },
-        ],
-      },
-    ],
+    types: schemaTypes,
   },
 });
