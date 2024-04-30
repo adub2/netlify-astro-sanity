@@ -23,6 +23,7 @@ export const postType = defineType({
     defineField({
       name: "pubdate",
       type: "datetime",
+      initialValue: "",
     }),
     defineField({
       name: "main_image",

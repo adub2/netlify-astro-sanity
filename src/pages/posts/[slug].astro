@@ -3,6 +3,8 @@
 export const prerender = true;
 import { sanityClient } from 'sanity:client';
 import { UrlFor } from '../../components/imageUrl.jsx';
+import PortableText from "../../components/PortableText.astro"
+import SanityImage from '../../components/SanityImage.astro';
 
 export async function getStaticPaths() {
   const posts = await sanityClient.fetch(`*[_type == "post" && defined(slug.current)]`);
@@ -11,13 +13,14 @@ export async function getStaticPaths() {
         params: {
           slug: post.slug.current,
         },
+        props: { ...post },
     };
   });
 }
  
 const { slug } = Astro.params;
-const { title, author, pubdate, main_image, details } = await sanityClient.fetch(`*[_type == "post" && slug.current == $slug][0]`, { slug });
-
+// const { title, author, pubdate, main_image, details } = await sanityClient.fetch(`*[_type == "post" && slug.current == $slug][0]`, { slug });
+const { title, author, pubdate, main_image, details } = Astro.props;
 ---
  
 <html>
@@ -25,8 +28,9 @@ const { title, author, pubdate, main_image, details } = await sanityClient.fetch
   <a href="/">Back</a>
   <h1>{title}</h1>
   <p>{author}</p>
-  <p>{pubdate.slice(0, 10)}</p>
-  <p>{JSON.stringify(details)}</p>
-  <img src={UrlFor(main_image).width(200).url()} />
+  <p>{typeof pubdate === 'string' ? new Date(pubdate).toLocaleDateString('en-US') : ''}</p>
+  <PortableText value={details} />
+  <img src={UrlFor(main_image).width(200).url()} alt="main image"/>
+  <SanityImage node={main_image} width="600" />
 </body>
 </html>
